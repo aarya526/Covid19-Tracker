@@ -1,0 +1,1 @@
+var trackerApp = angular.module('trackerApp', [ 'home', 'ngRoute' ]);

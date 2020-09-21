@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Covid-19 Tracker App</title>
+<style>
+body {
+	background: #efefef;
+}
+
+.small_bold{
+	font-size : 13px;
+	font-weight: bold;
+}
+
+.green {
+	color: green;
+	font-weight: bold;
+}
+
+.grey {
+	color: grey;
+	font-weight: bold;
+}
+
+.red {
+	color: red;
+	font-weight: bold;
+}
+
+.bg-blue {
+	background-color: #0061f2;
+	/*background-image: linear-gradient(135deg, #0061f2, rgba(105, 0, 199, .8));*/
+	background-image: linear-gradient(135deg, #408080, #0a2d2d);
+	color: #fff;
+}
+
+.table-responsive {
+	background-color: #fff;
+}
+
+.jumbotron {
+	padding-top: 1px;
+	border-radius: 0 !important;
+}
+
+.jumbotron>.container {
+	margin-bottom: 0;
+}
+
+.jumbotron p {
+	color: lightgrey;
+	font-weight: 500;
+	font-size: 20px;
+}
+
+.tile {
+	margin: 10px 0;
+	border-radius: 5px;
+	box-shadow: 0 0 5px 0px #333;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.tile_head {
+	padding: 20px 20px 10px;
+}
+
+.tile_footer {
+	padding: 10px 20px;
+	position: relative;
+}
+
+.tile_footer p {
+	margin-bottom: 5px;
+	font-size: 16px;
+}
+
+.tile h3 {
+	margin: 0;
+}
+
+.tile p {
+	color: #fff;
+	font-weight: 300;
+}
+
+.bc_opaque {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	top: 0;
+	right: 0;
+	opacity: 0.1;
+	border-bottom-right-radius: inherit;
+	background-color: black;
+	border-bottom-left-radius: inherit;
+}
+</style>
+</head>
+<body>
+	<div class="jumbotron bg-blue">
+		<div class="container">
+			<h1>
+				<i class="fas fa-tachometer-alt"></i>&nbsp;Dashboard
+			</h1>
+			<p>A place which show effect of Covid-19 in the entire world.</p>
+			<div class="row">
+				<div class="col-md-4">
+					<div class="tile bg-secondary">
+						<div class="tile_head">
+							<h3>Confirmed</h3>
+							<p>{{totalConfirmedCounts}}</p>
+						</div>
+						<div class="tile_footer">
+							<div class="bc_opaque"></div>
+							<p>
+								Changes since last Day : <strong>{{changesSincelastDayForConfirmed}}</strong>
+							</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="tile bg-danger">
+						<div class="tile_head">
+							<h3>Deaths</h3>
+							<p>{{totalDeathsCounts}}</p>
+						</div>
+						<div class="tile_footer">
+							<div class="bc_opaque"></div>
+							<p>
+								Changes since last Day : <strong>{{changesSincelastDayForDeaths}}</strong>
+							</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="tile bg-success">
+						<div class="tile_head">
+							<h3>Recovered</h3>
+							<p>{{totalRecoveredCounts}}  <span class="small_bold">({{percentRecoveredFromConfirmed}}%)</span></p>
+						</div>
+						<div class="tile_footer">
+							<div class="bc_opaque"></div>
+							<p>
+								Changes since last Day : <strong>{{changesSincelastDayForRecovered}}</strong>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--<hr />
+					<div class="form-inline">
+						<label for="status" class="mr-sm-2">Select List Type:</label> <select
+							class="form-control col-md-10" ng-model="status"
+							ng-change="submitStatus()">
+							<option value="confirmed">Confirmed</option>
+							<option value="deaths">Deaths</option>
+							<option value="recovered">Recovered</option>
+						</select>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="col-md-6 text-center">
+							<h1>
+								<strong>{{totalCases}}</strong>
+							</h1>
+							<p>Total Cases Reported</p>
+						</div>
+						<div class="col-md-6 text-center">
+							<h1>
+								<strong>{{changesSinceLastDay}}</strong>
+							</h1>
+							<p>New Cases Reported Since Previous Day</p>
+						</div>
+					</div>
+					<hr />-->
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h2>{{statusName}}</h2>
+				<hr />
+				<div class="form-group">
+					<input type="text" ng-model="query" class="form-control"
+						placeholder="Search List...." />
+				</div>
+				<div class="table-responsive">
+					<table class="table table-bordered" id="myTable">
+						<thead>
+							<tr>
+								<th>S.No</th>
+								<!-- <th>Province/State</th> -->
+								<th>Country</th>
+								<th>Confirmed</th>
+								<th>Deaths</th>
+								<th>Recovered</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr
+								ng-repeat="(key, value) in list | filter:query | orderBy : 'value.country'">
+								<td>{{$index + 1}}</td>
+								<!-- <td>{{t.state}}</td> -->
+								<td>{{value.country}}</td>
+								<td><span ng-repeat="(c_key, c_value) in value.confirmed">
+										{{c_key}} <br> <span class="grey">(<span ng-if="c_value >= 0">+</span>{{c_value}})</span>
+								</span></td>
+								<td><span ng-repeat="(d_key, d_value) in value.deaths">
+										{{d_key}} <br> <span class="red">(<span ng-if="d_value >= 0">+</span>{{d_value}})</span>
+								</span></td>
+								<td><span ng-repeat="(r_key, r_value) in value.recovered">
+										{{r_key}} <span class="small_bold"> ({{value.recoveryRate}}%)</span><br> <span class="green">(<span ng-if="r_value >= 0">+</span>{{r_value}})</span>
+								</span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
