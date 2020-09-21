@@ -7,6 +7,7 @@ public class CovidStats implements Comparable<CovidStats> {
 
 	private String state;
 	private String country;
+	private String totalCasesInWords;
 	private int totalCases;
 	private int changesSinceLastDay;
 
@@ -47,6 +48,14 @@ public class CovidStats implements Comparable<CovidStats> {
 		return "[ Province/State : " + state + ", Country/Region : " + country + ", Total Cases : " + totalCases
 				+ ", Changes Since Last Day : " + changesSinceLastDay + " ]";
 
+	}
+
+	public String getTotalCasesInWords() {
+		return totalCasesInWords;
+	}
+
+	public void setTotalCasesInWords(String totalCasesInWords) {
+		this.totalCasesInWords = totalCasesInWords;
 	}
 
 	@Override
